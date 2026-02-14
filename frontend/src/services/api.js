@@ -1,7 +1,8 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "https://community1-aps1.onrender.com/",
+  baseURL: "https://community1-aps1.onrender.com/api",
+  withCredentials: true,
 });
 
 API.interceptors.request.use((req) => {
