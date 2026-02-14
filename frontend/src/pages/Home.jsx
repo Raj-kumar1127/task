@@ -16,7 +16,7 @@ const Home = () => {
   const fetchPosts = async () => {
   try {
     const res = await axios.get(
-      `http://localhost:5000/api/posts/by-user/${userId}`,
+      `https://community1-aps1.onrender.com/api/posts/by-user/${userId}`,
       { headers: { Authorization: `Bearer ${token}` } }
     );
 
@@ -24,7 +24,7 @@ const Home = () => {
     const postsWithComments = await Promise.all(
       res.data.map(async (post) => {
         const commentsRes = await axios.get(
-          `http://localhost:5000/api/comments/${post._id}`,
+          `https://community1-aps1.onrender.com/api/comments/${post._id}`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
         return { ...post, comments: commentsRes.data };
@@ -50,7 +50,7 @@ const Home = () => {
       formData.append("content", content);
       if (image) formData.append("image", image);
 
-      await axios.post("http://localhost:5000/api/posts", formData, {
+      await axios.post("https://community1-aps1.onrender.com/api/posts", formData, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",
@@ -69,7 +69,7 @@ const Home = () => {
  
   const handleDeletePost = async (postId) => {
     try {
-      await axios.delete(`http://localhost:5000/api/posts/${postId}`, {
+      await axios.delete(`https://community1-aps1.onrender.com/api/posts/${postId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setPosts(posts.filter((post) => post._id !== postId));
@@ -84,7 +84,7 @@ const Home = () => {
       if (!commentText[postId]) return;
 
       await axios.post(
-        `http://localhost:5000/api/comments/${postId}`,
+        `https://community1-aps1.onrender.com/api/comments/${postId}`,
         { text: commentText[postId] }, // matches backend
         { headers: { Authorization: `Bearer ${token}` } }
       );
