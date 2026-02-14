@@ -154,7 +154,7 @@ const Home = () => {
               {/* IMAGE */}
               {post.image && (
                 <img
-                  src={`http://localhost:5000/uploads/${post.image}`}
+                  src={`https://community1-aps1.onrender.com/uploads/${post.image}`}
                   alt="Post"
                   className="w-full mt-4 rounded-lg max-h-96 object-cover"
                 />
