@@ -7,7 +7,7 @@ require("dotenv").config();
 const app = express();
 
 app.use(cors({
-  origin: "https://mycommunity11.netlify.app", 
+  origin: "https://community11.onrender.com", 
   credentials: true
 }));
 app.use(express.json());
