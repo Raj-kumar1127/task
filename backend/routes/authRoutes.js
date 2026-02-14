@@ -5,26 +5,24 @@ const User = require("../models/User");
 
 const router = express.Router();
 
-
+// Register
 router.post("/register", async (req, res) => {
   try {
     const { name, email, password, role } = req.body;
+    if (!name || !email || !password)
+      return res.status(400).json({ message: "Name, email and password required" });
 
-    // Check existing user
     const existingUser = await User.findOne({ email });
-    if (existingUser) {
+    if (existingUser)
       return res.status(400).json({ message: "Email already registered" });
-    }
 
-  
-    const hashed = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-   
     const user = await User.create({
       name,
       email,
-      password: hashed,
-      role: role || "user", 
+      password: hashedPassword,
+      role: role || "user",
     });
 
     res.status(201).json({
@@ -37,23 +35,29 @@ router.post("/register", async (req, res) => {
       },
     });
   } catch (error) {
-    res.status(500).json({ message: "Server Error" });
+    console.error("Register error:", error);
+    res.status(500).json({ message: "Server Error", error: error.message });
   }
 });
 
-
+// Login
 router.post("/login", async (req, res) => {
   try {
+    console.log("Login body:", req.body);
+
     const { email, password } = req.body;
+    if (!email || !password)
+      return res.status(400).json({ message: "Email and password required" });
 
     const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(400).json({ message: "Invalid credentials" });
-    }
+    if (!user) return res.status(400).json({ message: "Invalid credentials" });
 
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(400).json({ message: "Invalid credentials" });
+    if (!isMatch) return res.status(400).json({ message: "Invalid credentials" });
+
+    if (!process.env.JWT_SECRET) {
+      console.error("JWT_SECRET not defined!");
+      return res.status(500).json({ message: "Server misconfiguration" });
     }
 
     const token = jwt.sign(
@@ -72,7 +76,8 @@ router.post("/login", async (req, res) => {
       },
     });
   } catch (error) {
-    res.status(500).json({ message: "Server Error" });
+    console.error("Login error:", error);
+    res.status(500).json({ message: "Server Error", error: error.message });
   }
 });
 
